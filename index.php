@@ -6,7 +6,7 @@ get("/learners/:learnerId", function ($param) {
     $learner_id = $param['learnerId'];
 });
 
-put("/learners/:learnerId", function () {
+put("/learners/:learnerId", function ($param) {
     $_PUT = read_put();
     $user_pwd = $_PUT['password'];
 });
@@ -33,8 +33,7 @@ post("/learners", function () {
     } else {
         var_dump("L"utilisateur n'existe pas");
     }
-    
-    
+        
     Ce qu'il faut faire :
         - 1 : Vérifier si l'utilisateur existe 
         - 2 : Le cas échéant, vérifier si le mot de passe est bon
@@ -85,5 +84,62 @@ post("/learners", function () {
     exit;
 });
 
+put("/learners/:learnerId/state", function ($param) {
+    // A faire
+});
+
+get("/state", function () {
+    // A faire
+});
+
+get("/teams/:team_id", function ($param) {
+    // A faire
+});
+
+get("/activities", function ($date, $coin, $name, $limit, $offset) {
+    // A faire
+});
+
+get("/activities/:activity_id", function ($param) {
+    // A faire
+});
+
+post("/activities/:activity_id/marks", function ($param) {
+    // A faire
+});
+
+/*
+delete("/activities/:activity_id/mark", function ($param) {
+    // A faire
+});
+*/
+
+post("/activities/:activity_id/comments", function ($param): void {
+    // A faire
+});
+
+/*
+delete("/activities/:activity_id/comments/:comment_id", function ($param) {
+    // A faire
+});
+*/
+
+get("/activities/:activity_id/sessions/:session_id", function ($param) {
+    // A faire
+});
+
+post("/activities/:activity_id/session/:session_id", function ($param) {
+    // A faire
+});
+
+/*
+delete("/activities/:activity_id/sessions/:session_id", function ($param) {
+    // A faire
+});
+*/
+
+get("/trainers/:trainer_id", function ($param) {
+    // A faire
+});
 
 header("HTTP/1.0 404");
