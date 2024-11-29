@@ -17,7 +17,20 @@ post("/learners", function () {
     $user_pwd = $_PUT['password'];
     var_dump($user_id);
     var_dump($user_pwd);
-    var_dump($user_pwd);
+
+
+
+    $state = array("id" => 1, "title" => "En ligne", "color" => "green", "icon" => "check");
+    $skills = [array("name" => null, "level" => null, "color" => null, "icon" => null), null, null];
+    $marks = [array("activityId" => null, "mark" => null), null];
+
+    $donnee_user = array('id' => null, "firstName" => null, "lastName" => null, "email" => $user_id, "state" => $state, "skills" => $skills, "marks" => $marks);
+    var_dump(json_encode($donnee_user));
+
+
+
+
+
     /*$tableau = json_encode({
         "id": 10,
         "firstName": "theUser",
