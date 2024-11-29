@@ -15,50 +15,73 @@ post("/learners", function () {
     $_PUT = read_put();
     $user_id = $_PUT['mail'];
     $user_pwd = $_PUT['password'];
-    var_dump($user_id);
-    var_dump($user_pwd);
-
-
-
     $state = array("id" => 1, "title" => "En ligne", "color" => "green", "icon" => "check");
-    $skills = [array("name" => null, "level" => null, "color" => null, "icon" => null), null, null];
-    $marks = [array("activityId" => null, "mark" => null), null];
 
-    $donnee_user = array('id' => null, "firstName" => null, "lastName" => null, "email" => $user_id, "state" => $state, "skills" => $skills, "marks" => $marks);
-    var_dump(json_encode($donnee_user));
+    /*NOTE !! : 
+    
+    Ici, (Antonin), Il y a : 
+    
+    $user_existe = verification_user_existe($user_id);                             (return boolean)
+    if $(user_existe){
+        $password_correct = verification_password_correct($user_id, $user_pwd) ;   (return boolean)
+        if ($password_correct){
+            $donnee_user = remplir_donne_user($user_id, $user_pwd, $state);                (return donnee_user)
+            var_dump(json_encode($donnee_user));
+        } else{
+            var_dump("Le mot de passe est incorrect");
+        }
+    } else {
+        var_dump("L"utilisateur n'existe pas");
+    }
+    
+    
+    Ce qu'il faut faire :
+        - 1 : Vérifier si l'utilisateur existe 
+        - 2 : Le cas échéant, vérifier si le mot de passe est bon
+        - 3 : Le cas échéant, renvoyer le tableau donnée user
+            - 3.1 : Le tableau se compose ainsi :
+                -id          a recuperer                    
+                    -> id = Etudiant(N_Etu)
+                -firstName   a recuperer                    
+                    -> firstname = Etudiant(prenom)
+                -lastName    a recuperer                    
+                    -> lastname = Etudiant(nom)
+                -email       donnée en argument ($user_id)
+                -state       donnée en argument ($state)
+                -skill       a recuperer
+                    -> skills[name] = Competence(nom)
+                    -> skills[level] = Competence(niveau)
+                    -> skills[color] = Competence(couleur)
+                    -> skills[icon] = Competence(icone)
+                -marks       a recuperer
+                    -> marks[activityId] = Activite(id)
+                    -> marks[mark] = Note(note)
 
+                Note: il peut y avoir plusieurs skill et marks
+    */
 
+    $skills = [array("name" => null, "level" => null, "color" => null, "icon" => null), null]; //a enlever quand ce sera fait
+    $marks = [array("activityId" => null, "mark" => null), null]; //a enlever quand ce sera fait
 
-
-
-    /*$tableau = json_encode({
-        "id": 10,
-        "firstName": "theUser",
-        "lastName": "John",
-        "email": "john@email.com",
-        "state": {
-          "id": 1,
-          "title": "En ligne",
-          "color": "green",
-          "icon": "check"
-        },
-        "skills": [
-          {
-            "name": "agile",
-            "level": 2,
-            "color": "brown",
-            "icon": "brightness_1"
-          }
-        ],
-        "marks": [
-          {
-            "activityId": 1,
-            "mark": 5
-          }
-        ]
-      })
-
-    var_dump($tableau);*/
+    $user_existe = True;
+    if ($user_existe){
+        $password_correct = True;
+        if ($password_correct){
+            $donnee_user = array(
+                'id' => null, 
+                "firstName" => null, 
+                "lastName" => null, 
+                "email" => $user_id, 
+                "state" => $state, 
+                "skills" => $skills, 
+                "marks" => $marks); //a enlever quand ce sera fait
+            var_dump(json_encode($donnee_user));
+        }  else{
+            var_dump("Le mot de passe est incorrect");
+        }
+    } else {
+        var_dump("L'utilisateur n'existe pas");
+    }
     exit;
 });
 
