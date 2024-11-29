@@ -17,6 +17,7 @@ post("/learners", function () {
     $user_pwd = $_PUT['password'];
     var_dump($user_id);
     var_dump($user_pwd);
+    var_dump($user_pwd);
     exit;
 });
 
