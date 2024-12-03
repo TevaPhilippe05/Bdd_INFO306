@@ -47,7 +47,6 @@ function put($path, $callback)
     });
     _make("PUT", $path, $callback);
 }
-
 function delete($path, $callback)
 {
     options($path, function () {
