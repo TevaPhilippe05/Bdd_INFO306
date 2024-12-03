@@ -14,3 +14,16 @@ function db()
     }
     return $bdd;
 }
+
+function from_csv($csv) {
+    if (($handle = fopen($csv, 'r')) !== FALSE) {
+        while (($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
+            print_r($data);
+        }
+        fclose($handle);
+    } else {
+        echo "Error opening the file.";
+    }
+
+    $query = "INSERT INTO Etudiant ({})"
+}
