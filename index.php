@@ -20,14 +20,10 @@ post("/learners", function () {
     $_PUT = read_put();
     $user_id = $_PUT['mail'];
     $user_pwd = $_PUT['password'];
-    /*
-    
 
     $state = array("id" => 1, "title" => "En ligne", "color" => "green", "icon" => "check");
 
-    NOTE !! : 
-    
-    Ici, (Antonin), Il y a : 
+    /*
     
     $user_existe = verification_user_existe($user_id);                             (return boolean)
     if $(user_existe){
@@ -65,23 +61,13 @@ post("/learners", function () {
                     -> marks[mark] = Note(note)
 
                 Note: il peut y avoir plusieurs skill et marks
-    
+    */
 
-    $skills = [array("name" => null, "level" => null, "color" => null, "icon" => null), null]; //a enlever quand ce sera fait
-    $marks = [array("activityId" => null, "mark" => null), null]; //a enlever quand ce sera fait
-
-    $user_existe = True;
+    $user_existe = user_connect($user_id);
     if ($user_existe){
-        $password_correct = True;
+        $password_correct = password_correct($user_id, $user_pwd);
         if ($password_correct){
-            $donnee_user = array(
-                'id' => null, 
-                "firstName" => null, 
-                "lastName" => null, 
-                "email" => $user_id, 
-                "state" => $state, 
-                "skills" => $skills, 
-                "marks" => $marks); //a enlever quand ce sera fait
+            $donnee_user = remplir_donnee_utilisateur($user_id, $state);
             var_dump(json_encode($donnee_user));
         }  else{
             var_dump("Le mot de passe est incorrect");
@@ -89,9 +75,7 @@ post("/learners", function () {
     } else {
         var_dump("L'utilisateur n'existe pas");
     }
-    */
-    $var = user_connect($user_id, $user_pwd);
-    var_dump($var);
+
     exit;
 });
 
@@ -101,7 +85,9 @@ put("/learners/:learnerId/state", function ($param) {
 });
 
 get("/state", function () {
-    var_dump("Pas de paramètres");
+    $query = "SELECT * FROM `Etat`";
+    $result = mysqli_query($query);
+    var_dump($result);
     exit;
 });
 
