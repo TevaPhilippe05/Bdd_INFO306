@@ -1,12 +1,22 @@
 <?php
-
 include_once "bdd.php";
 
-$bdd = db();
+function user_connect($login, $mdp) {
+    
+    $bdd = db();
+    if (!$bdd) {
+        die("Erreur de connexion : " . mysqli_connect_error());
+    }
 
-function user_connect($mail, $psw) {
-    $query = "SELECT * FROM Etudiant WHERE {$mail}";
-    $out = mysqli_query($bdd, $query);
-    return $out;
+    $query = "SELECT login FROM Etudiant WHERE login = '$login'";
+    $result = mysqli_query($bdd, $query);
+
+    
+    // Vérifier si un résultat existe
+    $user_exists = mysqli_num_rows($result) > 0;
+
+    return $user_exists;
+
+
 }
 ?>

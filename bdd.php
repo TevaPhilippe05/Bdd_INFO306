@@ -1,8 +1,8 @@
 <?php
 
 #To fill
-$username = "";
-$password = "";
+$username = "info_gr4";
+$password = "v2C";
 
 function db()
 {
