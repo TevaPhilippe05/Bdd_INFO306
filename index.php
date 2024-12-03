@@ -85,6 +85,16 @@ put("/learners/:learnerId/state", function ($param) {
 });
 
 get("/state", function () {
+    /* 
+    Dans CMD ->
+
+    Premier exemple:
+    curl -X GET http://152.228.214.245/info306/info_gr4/state
+
+    Autre exemple :
+    curl -X DELETE http://152.228.214.245/info306/info_gr4/activities/2/marks
+    */
+    
     $query = "SELECT * FROM `Etat`";
     $result = mysqli_query($query);
     var_dump($result);
