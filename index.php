@@ -12,10 +12,15 @@ put("/learners/:learnerId", function ($param) {
     $user_pwd = $_PUT['password'];
 });
 
+
+// Quand on se connect sur le site
 post("/learners", function () {
     $_PUT = read_put();
     $user_id = $_PUT['mail'];
     $user_pwd = $_PUT['password'];
+
+    
+
     $state = array("id" => 1, "title" => "En ligne", "color" => "green", "icon" => "check");
 
     /*NOTE !! : 
