@@ -1,7 +1,9 @@
 <?php
 include_once "bdd.php";
 include_once "utility.php";
+include_once "db_request.php";
 
+# Teva et antonin on fait les learners, vous pouvez commencer par /state
 get("/learners/:learnerId", function ($param) {
     $learner_id = $param['learnerId'];
     return $learner_id;
@@ -12,18 +14,18 @@ put("/learners/:learnerId", function ($param) {
     $user_pwd = $_PUT['password'];
 });
 
-
 // Quand on se connect sur le site
 post("/learners", function () {
+    
     $_PUT = read_put();
     $user_id = $_PUT['mail'];
     $user_pwd = $_PUT['password'];
-
+    /*
     
 
     $state = array("id" => 1, "title" => "En ligne", "color" => "green", "icon" => "check");
 
-    /*NOTE !! : 
+    NOTE !! : 
     
     Ici, (Antonin), Il y a : 
     
@@ -63,7 +65,7 @@ post("/learners", function () {
                     -> marks[mark] = Note(note)
 
                 Note: il peut y avoir plusieurs skill et marks
-    */
+    
 
     $skills = [array("name" => null, "level" => null, "color" => null, "icon" => null), null]; //a enlever quand ce sera fait
     $marks = [array("activityId" => null, "mark" => null), null]; //a enlever quand ce sera fait
@@ -87,6 +89,9 @@ post("/learners", function () {
     } else {
         var_dump("L'utilisateur n'existe pas");
     }
+    */
+    $var = user_connect($user_id, $user_pwd);
+    var_dump($var);
     exit;
 });
 

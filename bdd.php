@@ -7,7 +7,7 @@ $password = "v2C";
 function db()
 {
     global $username, $password;
-    $bdd = mysqli_connect("localhost", $username, $password, $username) or die("Connection failed: " . mysqli_connect_error());
+    $bdd = mysqli_connect("localhost", $username, $password, "info306_tp_info_gr4") or die("Connection failed: " . mysqli_connect_error());
     if (mysqli_connect_errno()) {
         printf("Connect failed: %s\n", mysqli_connect_error());
         exit();
@@ -25,5 +25,5 @@ function from_csv($csv) {
         echo "Error opening the file.";
     }
 
-    $query = "INSERT INTO Etudiant ({})"
+    $query = "INSERT INTO Etudiant ({})";
 }
