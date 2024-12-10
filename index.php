@@ -3,6 +3,8 @@ include_once "bdd.php";
 include_once "utility.php";
 include_once "db_request.php";
 
+$bdd = db();
+
 # Teva et antonin on fait les learners, vous pouvez commencer par /state
 get("/learners/:learnerId", function ($param) {
     $learner_id = $param['learnerId'];
@@ -94,14 +96,28 @@ get("/state", function () {
     Autre exemple :
     curl -X DELETE http://152.228.214.245/info306/info_gr4/activities/2/marks
     */
-    
+    global $bdd;
     $query = "SELECT * FROM `Etat`";
-    $result = mysqli_query($query);
-    var_dump($result);
+    $data = mysqli_query($bdd, $query);
+    if (!$data) {
+        die("Erreur dans la requête : " . mysqli_error($bdd));
+    }
+    $res = mysqli_fetch_all($data, MYSQLI_ASSOC);
+    
+    var_dump($res);
     exit;
 });
 
 get("/teams/:team_id", function ($param) {
+    /*global $bdd;
+    $query = "SELECT * FROM `Groupe` WHERE `Num_groupe` = $param";
+    $data = mysqli_query($bdd, $query);
+    if (!$data) {
+        die("Erreur dans la requête : " . mysqli_error($bdd));
+    }
+    $res = mysqli_fetch_all($data, MYSQLI_ASSOC);
+    
+    var_dump($res);*/
     var_dump($param);
     exit;
 });
