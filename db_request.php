@@ -58,8 +58,6 @@ function remplir_donnee_utilisateur($user_id, $state){
         "state" => $state, 
         "skills" => $skills, 
         "marks" => $marks);
-
-    
 }
 
 

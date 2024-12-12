@@ -44,7 +44,7 @@ post("/learners", function () {
                                 nom as firstName,
                                 prenom as lastName,
                                 login as email,
-                                Num_
+                                Num_groupe as team
                         FROM Etudiant WHERE login = '$login' AND mdp = '$password'";
                 $result = mysqli_query(db(), $query);
 
@@ -56,7 +56,7 @@ post("/learners", function () {
                     "firstName" => $result_array['firstName'],
                     "lastName" => $result_array['lastName'],
                     "email" => $result_array['email'],
-                    "team" => $result_array['Num_'], // Assuming 'Num_' corresponds to 'team'
+                    "team" => $result_array['team'], // Assuming 'Num_' corresponds to 'team'
                 ];
 
                 // Encode the response as JSON and send it
@@ -116,7 +116,14 @@ get("/teams/:team_id", function ($param) {
     exit;
 });
 
-get("/activities", function ($date, $coin, $name, $limit, $offset) {
+get("/activities", function () {
+    
+    $date = $_GET['date'];
+    $coin = $_GET['coin'];
+    $name = $_GET['name'];
+    $limit = $_GET['limit'];
+    $offset = $_GET['offset'];
+
     global $bdd;
     if ($date){
         $query = "SELECT * FROM `Activite`
