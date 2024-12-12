@@ -41,11 +41,11 @@ function remplir_donnee_utilisateur($user_id, $state){
               JOIN Groupe G ON G.Num_groupe = E.id_groupe
               JOIN Comptence C ON C.nom = E.
               WHERE login = '$user_id'";
+
     $result = mysqli_query(db(), $query);
 
     // Vérifier si un résultat existe
     $password_ok = mysqli_num_rows($result) > 0;
-
 
 
 
@@ -64,6 +64,8 @@ function remplir_donnee_utilisateur($user_id, $state){
         "state" => $state, 
         "skills" => $skills, 
         "marks" => $marks);
+
+    
 }
 
 
