@@ -47,12 +47,6 @@ function remplir_donnee_utilisateur($user_id, $state){
     // Vérifier si un résultat existe
     $password_ok = mysqli_num_rows($result) > 0;
 
-
-
-
-
-
-
     $skills = [array("name" => null, "level" => null, "color" => null, "icon" => null), null]; //a enlever quand ce sera fait
     $marks = [array("activityId" => null, "mark" => null), null]; //a enlever quand ce sera fait
 
