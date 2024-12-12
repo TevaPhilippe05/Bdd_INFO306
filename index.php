@@ -40,12 +40,28 @@ post("/learners", function () {
             $result = mysqli_query(db(), $query);
 
             if (mysqli_num_rows($result) > 0) {
-                $query = "SELECT N_etu as id, 
-                                nom as firstName,
-                                prenom as lastName,
-                                login as email,
-                                Num_
-                        FROM Etudiant WHERE login = '$login' AND mdp = '$password'";
+                $query = "SELECT E.N_etu as id, 
+                                E.nom as firstName,
+                                E.prenom as lastName,
+                                E.login as email,
+                                E.Num_groupe as team,
+                                Etat.Id as id,
+                                Etat.titre as title,
+                                Etat.couleur as color,
+                                Etat.icon as icon,
+                                C.nom as name,
+                                C.niveau as level,
+                                C.couleur as color,
+                                C.icon as icon,
+                                N.Id as activityId,
+                                N.note as mark
+                        FROM Etudiant E 
+                        JOIN Etat Etat ON Etat.Id = E.Id_etat
+                        JOIN Etudiant_Comptence EC ON EC.N_etu = E.N_etu
+                        JOIN Comptence C ON C.Nom = EC.Nom_competence
+                        JOIN Note_Groupe NG ON NG.Num_groupe = E.Num_groupe
+                        JOIN Note N ON N.id = NG.id_note
+                        WHERE login = '$login' AND mdp = '$password'";
                 $result = mysqli_query(db(), $query);
 
 
@@ -56,7 +72,27 @@ post("/learners", function () {
                     "firstName" => $result_array['firstName'],
                     "lastName" => $result_array['lastName'],
                     "email" => $result_array['email'],
-                    "team" => $result_array['Num_'], // Assuming 'Num_' corresponds to 'team'
+                    "team" => $result_array['team'],
+                    "state" => [
+                        "id" => $result_array['id'],
+                        "title" => $result_array['title'],
+                        "color" => $result_array['color'],
+                        "icon" => $result_array['icon']
+                    ],
+                    "skills" => [
+                        [
+                            "name" => "name",
+                            "level" => "level",
+                            "color" => "color",
+                            "icon" => "icon"
+                        ]
+                    ],
+                    "marks" => [
+                        [
+                            "activityId" => "activityId",
+                            "mark" => "mark"
+                        ]
+                    ]
                 ];
 
                 // Encode the response as JSON and send it
