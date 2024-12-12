@@ -20,65 +20,59 @@ put("/learners/:learnerId", function ($param) {
 post("/learners", function () {
     
     $_PUT = read_put();
-    $user_id = $_PUT['mail'];
-    $user_pwd = $_PUT['password'];
+    $login = $_PUT['mail'];
+    $password = $_PUT['password'];
 
-    $state = array("id" => 1, "title" => "En ligne", "color" => "green", "icon" => "check");
-
-    /*
-    
-    $user_existe = verification_user_existe($user_id);                             (return boolean)
-    if $(user_existe){
-        $password_correct = verification_password_correct($user_id, $user_pwd) ;   (return boolean)
-        if ($password_correct){
-            $donnee_user = remplir_donne_user($user_id, $user_pwd, $state);                (return donnee_user)
-            var_dump(json_encode($donnee_user));
-        } else{
-            var_dump("Le mot de passe est incorrect");
-        }
-    } else {
-        var_dump("L"utilisateur n'existe pas");
+    // Verifie la connection a la DB
+    if (!db()) {
+        die("Erreur de connexion : " . mysqli_connect_error());
     }
-        
-    Ce qu'il faut faire :
-        - 1 : Vérifier si l'utilisateur existe 
-        - 2 : Le cas échéant, vérifier si le mot de passe est bon
-        - 3 : Le cas échéant, renvoyer le tableau donnée user
-            - 3.1 : Le tableau se compose ainsi :
-                -id          a recuperer                    
-                    -> id = Etudiant(N_Etu)
-                -firstName   a recuperer                    
-                    -> firstname = Etudiant(prenom)
-                -lastName    a recuperer                    
-                    -> lastname = Etudiant(nom)
-                -email       donnée en argument ($user_id)
-                -state       donnée en argument ($state)
-                -skill       a recuperer
-                    -> skills[name] = Competence(nom)
-                    -> skills[level] = Competence(niveau)
-                    -> skills[color] = Competence(couleur)
-                    -> skills[icon] = Competence(icone)
-                -marks       a recuperer
-                    -> marks[activityId] = Activite(id)
-                    -> marks[mark] = Note(note)
+    else {
 
-                Note: il peut y avoir plusieurs skill et marks
-    */
+        // On verifie l'existence de l'utilisateur qui essay de se connecter
+        $query = "SELECT nom FROM Etudiant WHERE login = '$login'";
+        $result = mysqli_query(db(), $query);
 
-    $user_existe = user_connect($user_id);
-    if ($user_existe){
-        $password_correct = password_correct($user_id, $user_pwd);
-        if ($password_correct){
-            $donnee_user = remplir_donnee_utilisateur($user_id, $state);
-            var_dump(json_encode($donnee_user));
-        }  else{
-            var_dump("Le mot de passe est incorrect");
+
+        // L'utilisateur exist on verifie sont mdp
+        if (mysqli_num_rows($result) > 0) {
+            $query= "SELECT nom FROM Etudiant WHERE login = '$login' AND mdp = '$password'";
+            $result = mysqli_query(db(), $query);
+
+            if (mysqli_num_rows($result) > 0) {
+                $query = "SELECT N_etu as id, 
+                                nom as firstName,
+                                prenom as lastName,
+                                login as email,
+                                Num_
+                        FROM Etudiant WHERE login = '$login' AND mdp = '$password'";
+                $result = mysqli_query(db(), $query);
+
+
+                // Formatting the result into JSON
+                $result_array = mysqli_fetch_assoc($result);
+                $response = [
+                    "id" => $result_array['id'],
+                    "firstName" => $result_array['firstName'],
+                    "lastName" => $result_array['lastName'],
+                    "email" => $result_array['email'],
+                    "team" => $result_array['Num_'], // Assuming 'Num_' corresponds to 'team'
+                ];
+
+                // Encode the response as JSON and send it
+                header('Content-Type: application/json');
+                echo json_encode($response);
+                exit;
+            }
+            else {
+                error_log("Le mdp est incorrect");
+            }
         }
-    } else {
-        var_dump("L'utilisateur n'existe pas");
-    }
+        else {
+            error_log("Le login n'existe pas");
+        }
 
-    exit;
+    }
 });
 
 put("/learners/:learnerId/state", function ($param) {
