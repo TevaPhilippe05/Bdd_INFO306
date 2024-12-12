@@ -2,13 +2,15 @@
 include_once "bdd.php";
 include_once "utility.php";
 include_once "db_request.php";
+include_once "Chloe_test.php";
+include_once "raph.php";
 
 $bdd = db();
 
-# Teva et antonin on fait les learners, vous pouvez commencer par /state
 get("/learners/:learnerId", function ($param) {
-    $learner_id = $param['learnerId'];
-    return $learner_id;
+    $learner_id = $param["learnerId"];
+    var_dump($learner_id);
+    exit;
 });
 
 put("/learners/:learnerId", function ($param) {
@@ -125,6 +127,8 @@ get("/state", function () {
 
     Autre exemple :
     curl -X DELETE http://152.228.214.245/info306/info_gr4/activities/2/marks
+
+    curl -X GET "http://152.228.214.245/info306/info_gr4/activities?date=true&coin=false"
     */
     global $bdd;
     $query = "SELECT * FROM `Etat`";
@@ -138,22 +142,7 @@ get("/state", function () {
     exit;
 });
 
-get("/teams/:team_id", function ($param) {
-    /*global $bdd;
-    $query = "SELECT * FROM `Groupe` WHERE `Num_groupe` = $param";
-    $data = mysqli_query($bdd, $query);
-    if (!$data) {
-        die("Erreur dans la requête : " . mysqli_error($bdd));
-    }
-    $res = mysqli_fetch_all($data, MYSQLI_ASSOC);
-    
-    var_dump($res);*/
-    var_dump($param);
-    exit;
-});
-
 get("/activities", function () {
-    
     $date = $_GET['date'];
     $coin = $_GET['coin'];
     $name = $_GET['name'];
@@ -187,50 +176,17 @@ get("/activities", function () {
     exit;
 });
 
-get("/activities/:activity_id", function ($param) {
-    var_dump($param);
-    exit;
-});
-
-post("/activities/:activity_id/marks", function ($param) {
-    var_dump($param);
-    exit;
-});
-
-delete("/activities/:activity_id/marks", function ($param) {
-    var_dump($param);
-    exit;
-});
-
-post("/activities/:activity_id/comments", function ($param): void {
-    var_dump($param);
-    exit;
-});
-
-
-delete("/activities/:activity_id/comments/:comment_id", function ($param) {
-    var_dump($param);
-    exit;
-});
-
 get("/activities/:activity_id/sessions/:session_id", function ($param) {
-    var_dump($param);
-    exit;
-});
+    //repere tev
+    $activity_id = $param["activity"];
+    $session_id = $param["session_id"];
+    global $bdd;
 
-post("/activities/:activity_id/session/:session_id", function ($param) {
-    var_dump($param);
-    exit;
-});
-
-
-delete("/activities/:activity_id/sessions/:session_id", function ($param) {
-    var_dump($param);
-    exit;
-});
-
-
-get("/trainers/:trainer_id", function ($param) {
+    $query = "SELECT * FROM `Session`
+    WHERE id = '$session_id'";
+    
+    
+    
     var_dump($param);
     exit;
 });
