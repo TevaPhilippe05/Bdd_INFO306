@@ -1,6 +1,7 @@
 <?php
 include_once "bdd.php";
 
+//fait
 get("/learners/:learnerId", function ($param) {
     $learner_id = $param["learnerId"];
     // Verifie la connection a la DB
@@ -70,6 +71,7 @@ get("/learners/:learnerId", function ($param) {
     }
 });
 
+//fait
 put("/learners/:learnerId", function ($param) {
     $user_id = $param["learnerId"];
     $_PUT = read_put();
@@ -186,8 +188,26 @@ post("/learners", function () {
 });
 
 put("/learners/:learnerId/state", function ($param) {
-    var_dump($param);
-    exit;
+    $user_id = $param["learnerId"];
+    $_PUT = read_put();
+    $state_id = $_PUT['state_id'];
+
+    if (!db()) {
+        die("Erreur de connexion : " . mysqli_connect_error());
+    } else {
+        $query = "UPDATE Etudiant SET Id_etat='$state_id' WHERE N_etu='$user_id'";
+        $result = mysqli_query(db(), $query);
+
+        // Si la commande a fonctionné
+        if ($result) {
+            echo json_encode(["success" => true]);
+        } else {
+            echo json_encode([
+                "success" => false,
+            ]);
+        }
+        exit;
+    }
 });
 
 ?>
