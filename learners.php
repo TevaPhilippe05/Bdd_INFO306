@@ -53,9 +53,9 @@ post("/learners", function () {
                                 N.note as mark
                         FROM Etudiant E
                         JOIN Etat Etat ON Etat.Id = E.Id_etat
-                        JOIN Etudiant_Comptence EC ON EC.N_etu = E.N_etu
+                        JOIN Etudiant_Competence EC ON EC.N_etu = E.N_etu
                         JOIN Competence C ON C.Nom = EC.Nom_competence
-                        JOIN Note_Groupe NG ON NG.Num_groupe = E.Num_groupe
+                        JOIN Note_groupe NG ON NG.Num_groupe = E.Num_groupe
                         JOIN Note N ON N.id = NG.id_note
                         WHERE login = '$login' AND mdp = '$password'";
                 $result = mysqli_query(db(), $query);
