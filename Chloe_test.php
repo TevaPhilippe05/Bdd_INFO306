@@ -39,7 +39,7 @@ $bdd = db();
         $id_activite = $param["activity_id"];
 
         $query = "DELETE FROM Note WHERE Id = '$id_activite'";
-       $data = mysqli_query($bdd, $query);
+        $data = mysqli_query($bdd, $query);
         if (!$data) {
             die("Erreur dans la requête : " . mysqli_error($bdd));
         }
