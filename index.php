@@ -1,9 +1,10 @@
 <?php
 include_once "utility.php";
-include_once "db_request.php";
-include_once "Chloe_test.php";
-include_once "raph.php";
 include_once "learners.php";
+include_once "teams.php";
+
+//include_once "Chloe_test.php";
+include_once "raph.php";
 
 $bdd = db();
 
