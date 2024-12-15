@@ -7,7 +7,8 @@ $bdd = db();
 
     get("/teams/:team_id", function ($param) {
         global $bdd;
-        $query = "SELECT * FROM `Groupe` WHERE Num_groupe = $param";
+        $Id_groupe= $param["team_id"];
+        $query = "SELECT * FROM Groupe WHERE Num_groupe = '$Id_groupe'";
         $data = mysqli_query($bdd, $query);
         if (!$data) {
             die("Erreur dans la requête : " . mysqli_error($bdd));
@@ -18,16 +19,64 @@ $bdd = db();
         exit;
     });
 
-    delete("/activities/:activity_id/marks", function ($id_activite,$id_etudiant) {
+    get("/trainers/:trainer_id", function ($param) {
         global $bdd;
-        $query = "DELETE n.note FROM `Note` AS n Join `Note_Groupe` As ng ON n.Id = ng.Id_note WHERE ng.Num_groupe = 1 AND n.Id_activite = 7";
+        $id = $param["trainer_id"];
+        $query = "SELECT * FROM Professeur WHERE Id = '$id'";
         $data = mysqli_query($bdd, $query);
         if (!$data) {
             die("Erreur dans la requête : " . mysqli_error($bdd));
         }
-        //$res = mysqli_fetch_all($data, MYSQLI_ASSOC);
+        $res = mysqli_fetch_all($data, MYSQLI_ASSOC);
         
-        //var_dump($res);
+        var_dump($res);
+        exit;
+    });
+
+
+    delete("/activities/:activity_id/marks", function ($param) {
+        global $bdd;
+        $id_activite = $param["activity_id"];
+
+        $query = "DELETE FROM Note WHERE Id = '$id_activite'";
+       $data = mysqli_query($bdd, $query);
+        if (!$data) {
+            die("Erreur dans la requête : " . mysqli_error($bdd));
+        }
+
+        return ["succes" => $data];        
+        exit;
+    });
+        
+    delete("/activities/:activity_id/comments/:comment_id", function ($param) {
+        global $bdd;
+
+        $id_activite = $param["activity_id"];
+        $id_comment = $param["comment_id"];
+
+        $query = "DELETE FROM Commentaires WHERE Id = '$id_comment' AND Id_activite = '$id_activite' ";
+       $data = mysqli_query($bdd, $query);
+        if (!$data) {
+            die("Erreur dans la requête : " . mysqli_error($bdd));
+        }
+        var_dump($param);
+
+        return ["succes" => $data];        
+        exit;
+
+    });
+//Il y a une incoérence quelque part car on a pas besoin de id activite non?
+    delete("/activities/:activity_id/sessions/:session_id", function ($param) {
+        global $bdd;
+        $id_activite = $param["activity_id"];
+        $id_session = $param["session_id"];
+
+        $query = "DELETE FROM Session WHERE Id = '$id_session' AND Id_activite = '$id_activite' ";
+        $data = mysqli_query($bdd, $query);
+        if (!$data) {
+            die("Erreur dans la requête : " . mysqli_error($bdd));
+        }
+        var_dump($param);
         return ["succes" => $data];
         exit;
     });
