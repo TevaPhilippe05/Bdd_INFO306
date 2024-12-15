@@ -2,44 +2,39 @@
 include_once "bdd.php";
 
 get("/teams/:team_id", function ($param) {
-    $id_groupe = $param["team_id"];
+    $id_groupe= $param["team_id"];
 
-    // Vérification de la connexion à la base de données
     if (!db()) {
-        die(json_encode([
-            "success" => false,
-            "message" => "Erreur de connexion : " . mysqli_connect_error()
-        ]));
+        die("Erreur de connexion : " . mysqli_connect_error());
     } else {
 
-        // Récupérer les informations du groupe
-        $query = "SELECT Num_groupe, nb_credit, bom_groupe as nom_groupe 
-                  FROM Groupe WHERE Num_groupe = '$id_groupe'";
-
+        //Get groupe info
+        $query = "SELECT Num_groupe as id,
+                    nb_credit as coin,
+                    nom_groupe as name FROM Groupe WHERE Num_groupe = '$id_groupe'";
         $result = mysqli_query(db(), $query);
 
-        // Vérifier si le groupe existe
-        if ($result && mysqli_num_rows($result) > 0) {
-            // Récupérer les résultats sous forme de tableau associatif
-            $result_array = mysqli_fetch_assoc($result);
+        $result_array = mysqli_fetch_assoc($result);
+        $response = [
+            "id" => $result_array['id'],
+            "name" => $result_array['name'],
+            "coin" => $result_array["coin"],
+        ];
 
-            // Encapsuler les résultats dans un tableau comme dans votre exemple
-            $response = [
-                $result_array // Le tableau avec les résultats
-            ];
-
-            // Envoi de la réponse JSON avec l'en-tête appropriée
-            header('Content-Type: application/json');
-            echo json_encode($response);
-        } else {
-            // Si aucun groupe trouvé, retourner une réponse d'erreur
-            header('Content-Type: application/json');
-            echo json_encode([
-                "success" => false,
-                "message" => "Groupe introuvable."
-            ]);
-        }
-
+//        header('access-control-allow-methods: GET,POST,PUT,DELETE,OPTIONS
+//        access-control-allow-origin: http://51.68.91.213
+//        connection: Keep-Alive
+//        content-encoding: gzip
+//        content-length: 977
+//        content-type: text/html;
+//        charset=UTF-8
+//        date: Sun,15 Dec 2024 21:32:04 GMT
+//        keep-alive: timeout=5,max=100
+//        server: Apache/2.4.62 (Debian)
+//        vary: Accept-Encoding ');
+        header('Content-Type: application/json');
+        echo json_encode($response);
         exit;
+
     }
 });
