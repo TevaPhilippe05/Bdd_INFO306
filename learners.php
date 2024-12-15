@@ -3,8 +3,71 @@ include_once "bdd.php";
 
 get("/learners/:learnerId", function ($param) {
     $learner_id = $param["learnerId"];
-    var_dump($learner_id);
-    exit;
+    // Verifie la connection a la DB
+    if (!db()) {
+        die("Erreur de connexion : " . mysqli_connect_error());
+    } else {
+
+        $query = "SELECT E.N_etu as id, 
+                                E.nom as firstName,
+                                E.prenom as lastName,
+                                E.login as email,
+                                E.Num_groupe as team,
+                                Etat.Id as id,
+                                Etat.titre as title,
+                                Etat.couleur as color,
+                                Etat.icon as icon,
+                                C.nom as name,
+                                C.niveau as level,
+                                C.couleur as color,
+                                C.icon as icon,
+                                N.Id as activityId,
+                                N.note as mark
+                        FROM Etudiant E
+                        JOIN Etat Etat ON Etat.Id = E.Id_etat
+                        JOIN Etudiant_Competence EC ON EC.N_etu = E.N_etu
+                        JOIN Competence C ON C.Nom = EC.Nom_competence
+                        JOIN Note_groupe NG ON NG.Num_groupe = E.Num_groupe
+                        JOIN Note N ON N.id = NG.id_note
+                        WHERE E.N_etu ='$learner_id'";
+        $result = mysqli_query(db(), $query);
+
+
+        // Formatting the result into JSON
+        $result_array = mysqli_fetch_assoc($result);
+        $response = [
+            "id" => $result_array['id'],
+            "firstName" => $result_array['firstName'],
+            "lastName" => $result_array['lastName'],
+            "email" => $result_array['email'],
+            "team" => $result_array['team'],
+            "state" => [
+                "id" => $result_array['id'],
+                "title" => $result_array['title'],
+                "color" => $result_array['color'],
+                "icon" => $result_array['icon']
+            ],
+            "skills" => [
+                [
+                    "name" => "name",
+                    "level" => "level",
+                    "color" => "color",
+                    "icon" => "icon"
+                ]
+            ],
+            "marks" => [
+                [
+                    "activityId" => "activityId",
+                    "mark" => "mark"
+                ]
+            ]
+        ];
+
+        // Encode the response as JSON and send it
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit;
+    }
 });
 
 put("/learners/:learnerId", function ($param) {
@@ -22,8 +85,7 @@ post("/learners", function () {
     // Verifie la connection a la DB
     if (!db()) {
         die("Erreur de connexion : " . mysqli_connect_error());
-    }
-    else {
+    } else {
 
         // On verifie l'existence de l'utilisateur qui essay de se connecter
         $query = "SELECT nom FROM Etudiant WHERE login = '$login'";
@@ -32,7 +94,7 @@ post("/learners", function () {
 
         // L'utilisateur exist on verifie sont mdp
         if (mysqli_num_rows($result) > 0) {
-            $query= "SELECT nom FROM Etudiant WHERE login = '$login' AND mdp = '$password'";
+            $query = "SELECT nom FROM Etudiant WHERE login = '$login' AND mdp = '$password'";
             $result = mysqli_query(db(), $query);
 
             if (mysqli_num_rows($result) > 0) {
@@ -95,12 +157,10 @@ post("/learners", function () {
                 header('Content-Type: application/json');
                 echo json_encode($response);
                 exit;
-            }
-            else {
+            } else {
                 error_log("Le mdp est incorrect");
             }
-        }
-        else {
+        } else {
             error_log("Le login n'existe pas");
         }
 
