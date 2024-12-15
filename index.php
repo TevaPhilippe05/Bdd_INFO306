@@ -7,8 +7,6 @@ include_once "learners.php";
 
 $bdd = db();
 
-
-
 get("/state", function () {
     /* 
     Dans CMD ->
