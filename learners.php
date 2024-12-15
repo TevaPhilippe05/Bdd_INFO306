@@ -71,8 +71,26 @@ get("/learners/:learnerId", function ($param) {
 });
 
 put("/learners/:learnerId", function ($param) {
+    $user_id = $param["learnerId"];
     $_PUT = read_put();
     $user_pwd = $_PUT['password'];
+
+    if (!db()) {
+        die("Erreur de connexion : " . mysqli_connect_error());
+    } else {
+        $query = "UPDATE Etudiant SET mdp='$user_pwd' WHERE N_etu='$user_id'";
+        $result = mysqli_query(db(), $query);
+
+        // Si la commande a fonctionné
+        if ($result) {
+            echo json_encode(["success" => true]);
+        } else {
+            echo json_encode([
+                "success" => false,
+            ]);
+        }
+        exit;
+    }
 });
 
 //Fait
