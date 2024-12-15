@@ -138,7 +138,7 @@ get("/state", function () {
     }
     $res = mysqli_fetch_all($data, MYSQLI_ASSOC);
     
-    var_dump($res);
+    var_dump(json_encode($res));
     exit;
 });
 
@@ -172,22 +172,25 @@ get("/activities", function () {
     }
     $res = mysqli_fetch_all($data, MYSQLI_ASSOC);
     
-    var_dump($res);
+    var_dump(json_encode($res));
     exit;
 });
 
 get("/activities/:activity_id/sessions/:session_id", function ($param) {
-    //repere tev
-    $activity_id = $param["activity"];
+    $activity_id = $param["activity_id"]; // Inutile en réalité
     $session_id = $param["session_id"];
     global $bdd;
 
     $query = "SELECT * FROM `Session`
     WHERE id = '$session_id'";
+
+    $data = mysqli_query($bdd, $query);
+    if (!$data) {
+        die("Erreur dans la requête : " . mysqli_error($bdd));
+    }
+    $res = mysqli_fetch_all($data, MYSQLI_ASSOC);
     
-    
-    
-    var_dump($param);
+    var_dump(json_encode($res));
     exit;
 });
 
