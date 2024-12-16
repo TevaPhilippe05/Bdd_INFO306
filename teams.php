@@ -13,24 +13,21 @@ get("/teams/:team_id", function ($param) {
         $result_1 = mysqli_query(db(), $query);
 
         //Cette requête récupère toutes les clés des étudiants du groupe
-        $query = "SELECT N_etu as id FROM Etudiant WHERE Num_groupe='$id_groupe'";
-        $result = mysqli_query(db(), $query);
-
         $learners = [];
-        while ($row = mysqli_fetch_assoc($result)) {
+        while ($row = mysqli_fetch_assoc(getUsersIdFromGroupe($id_groupe))) {
             $learner_id = $row['id'];
-
             $learners[] = getUserInfo($learner_id);
         }
 
         // Ici on renvoie les données formatées en JSON
         $result_array = mysqli_fetch_assoc($result_1);
-        $response = [
+        $response = [[
             "id" => $result_array['id'],
             "name" => $result_array['name'],
             "coin" => $result_array["coin"],
-            "learners" => $learners
-        ];
+            "learners" => $learners,
+            "sessions" =>
+        ]];
 
         header('Content-Type: application/json');
         echo json_encode($response);

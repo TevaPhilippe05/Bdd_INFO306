@@ -59,4 +59,16 @@ function getUserInfo($learner_id) {
     return $response;
 }
 
+function getUsersIdFromGroupe($id_groupe)
+{
+    $query = "SELECT N_etu as id FROM Etudiant WHERE Num_groupe='$id_groupe'";
+    $result = mysqli_query(db(), $query);
+    return $result;
+}
+
+function getGroupeActivite($id_groupe)
+{
+    $query = "SELECT"
+}
+
 ?>
