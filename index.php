@@ -83,5 +83,3 @@ get("/activities/:activity_id/sessions/:session_id", function ($param) {
 });
 
 header("HTTP/1.0 404");
-
-?>
