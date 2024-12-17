@@ -68,7 +68,26 @@ function getUsersIdFromGroupe($id_groupe)
 
 function getGroupeActivite($id_groupe)
 {
-    $query = "SELECT"
+    $query = "SELECT S.Id as id,
+              S.Id_activite as id_a,
+              A.Id_prof as trainerId,
+              A.nom as name,
+              A.description as syllabus,
+              A.credit as coin,
+              A.nb_groupe_max as maxTeams,
+              P.titre as title,
+              P.date_debut as startDate,
+              P.date_fin as endDate,
+              P.couleur as color
+              FROM Session S
+              JOIN Activite A ON S.Id_activite=A.Id
+              JOIN Periode P ON A.Periode=P.Id
+              JOIN Groupe_Activite G ON A.id=G.Id_activite
+              WHERE G.Num_groupe='$id_groupe'";
+
+    $result = mysqli_query(db(), $query);
+
+    return $result;
 }
 
 ?>
