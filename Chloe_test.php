@@ -5,7 +5,7 @@ include_once "db_request.php";
 
 $bdd = db();
 
-    get("/teams/:team_id", function ($param) {
+    /*get("/teams/:team_id", function ($param) {
         global $bdd;
         $Id_groupe= $param["team_id"];
         $query = "SELECT * FROM Groupe WHERE Num_groupe = '$Id_groupe'";
@@ -17,7 +17,7 @@ $bdd = db();
         
         var_dump($data);
         exit;
-    });
+    });*/
 
     get("/trainers/:trainer_id", function ($param) {
         global $bdd;
