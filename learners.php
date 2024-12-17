@@ -71,7 +71,7 @@ post("/learners", function () {
                                 E.prenom as lastName,
                                 E.login as email,
                                 E.Num_groupe as team,
-                                Etat.Id as id,
+                                Etat.Id as id_e,
                                 Etat.titre as title,
                                 Etat.couleur as color,
                                 Etat.icon as icon,
@@ -82,11 +82,11 @@ post("/learners", function () {
                                 N.Id as activityId,
                                 N.note as mark
                         FROM Etudiant E
-                        JOIN Etat Etat ON Etat.Id = E.Id_etat
-                        JOIN Etudiant_Competence EC ON EC.N_etu = E.N_etu
-                        JOIN Competence C ON C.Nom = EC.Nom_competence
-                        JOIN Note_groupe NG ON NG.Num_groupe = E.Num_groupe
-                        JOIN Note N ON N.id = NG.id_note
+                        LEFT JOIN Etat Etat ON Etat.Id = E.Id_etat
+                        LEFT JOIN Etudiant_Competence EC ON EC.N_etu = E.N_etu
+                        LEFT JOIN Competence C ON C.Nom = EC.Nom_competence
+                        LEFT JOIN Note_groupe NG ON NG.Num_groupe = E.Num_groupe
+                        LEFT JOIN Note N ON N.id = NG.id_note
                         WHERE login = '$login' AND mdp = '$password'";
                 $result = mysqli_query(db(), $query);
 
@@ -94,36 +94,36 @@ post("/learners", function () {
                 // Formatting the result into JSON
                 $result_array = mysqli_fetch_assoc($result);
                 $response = [
-                    "id" => $result_array['id'],
+                    "id" => +$result_array['id'],
                     "firstName" => $result_array['firstName'],
                     "lastName" => $result_array['lastName'],
                     "email" => $result_array['email'],
                     "team" => $result_array['team'],
                     "state" => [
-                        "id" => $result_array['id'],
+                        "id" => +$result_array['id_e'],
                         "title" => $result_array['title'],
                         "color" => $result_array['color'],
                         "icon" => $result_array['icon']
                     ],
                     "skills" => [
                         [
-                            "name" => "name",
-                            "level" => "level",
-                            "color" => "color",
-                            "icon" => "icon"
+                            "name" => $result_array["name"],
+                            "level" => +$result_array["level"],
+                            "color" => $result_array["color"],
+                            "icon" => $result_array["icon"]
                         ]
                     ],
                     "marks" => [
                         [
-                            "activityId" => "activityId",
-                            "mark" => "mark"
+                            "activityId" => +$result_array["activityId"],
+                            "mark" => +$result_array["mark"]
                         ]
                     ]
                 ];
 
                 // Encode the response as JSON and send it
                 header('Content-Type: application/json');
-                echo json_encode($response);
+                return json_encode($response);
                 exit;
             } else {
                 error_log("Le mdp est incorrect");

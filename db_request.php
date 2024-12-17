@@ -7,57 +7,79 @@ function getUserInfo($learner_id) {
                                 E.prenom as lastName,
                                 E.login as email,
                                 E.Num_groupe as team,
-                                Etat.Id as id,
+                                Etat.Id as id_e,
                                 Etat.titre as title,
-                                Etat.couleur as color,
-                                Etat.icon as icon,
-                                C.nom as name,
-                                C.niveau as level,
-                                C.couleur as color,
-                                C.icon as icon,
+                                Etat.couleur as state_color,
+                                Etat.icon as state_icon,
+                                C.nom as skill_name,
+                                C.niveau as skill_level,
+                                C.couleur as skill_color,
+                                C.icon as skill_icon,
                                 N.Id as activityId,
                                 N.note as mark
                         FROM Etudiant E
-                        JOIN Etat Etat ON Etat.Id = E.Id_etat
-                        JOIN Etudiant_Competence EC ON EC.N_etu = E.N_etu
-                        JOIN Competence C ON C.Nom = EC.Nom_competence
-                        JOIN Note_groupe NG ON NG.Num_groupe = E.Num_groupe
-                        JOIN Note N ON N.id = NG.id_note
+                        LEFT JOIN Etat Etat ON Etat.Id = E.Id_etat
+                        LEFT JOIN Etudiant_Competence EC ON EC.N_etu = E.N_etu
+                        LEFT JOIN Competence C ON C.Nom = EC.Nom_competence
+                        LEFT JOIN Note_groupe NG ON NG.Num_groupe = E.Num_groupe
+                        LEFT JOIN Note N ON N.id = NG.id_note
                         WHERE E.N_etu ='$learner_id'";
+
     $result = mysqli_query(db(), $query);
+    if (!$result) {
+        die("Query Error: " . mysqli_error(db()));
+    }
 
+    $response = null;
+    $skills = [];
+    $marks = [];
 
-    // Formatting the result into JSON
-    $result_array = mysqli_fetch_assoc($result);
-    $response = [
-        "id" => $result_array['id'],
-        "firstName" => $result_array['firstName'],
-        "lastName" => $result_array['lastName'],
-        "email" => $result_array['email'],
-        "team" => $result_array['team'],
-        "state" => [
-            "id" => $result_array['id'],
-            "title" => $result_array['title'],
-            "color" => $result_array['color'],
-            "icon" => $result_array['icon']
-        ],
-        "skills" => [
-            [
-                "name" => "name",
-                "level" => "level",
-                "color" => "color",
-                "icon" => "icon"
-            ]
-        ],
-        "marks" => [
-            [
-                "activityId" => "activityId",
-                "mark" => "mark"
-            ]
-        ]
-    ];
+    while ($row = mysqli_fetch_assoc($result)) {
+        // Initialize response with student and state data only once
+        if ($response === null) {
+            $response = [
+                "id" => +$row['id'],
+                "firstName" => $row['firstName'],
+                "lastName" => $row['lastName'],
+                "email" => $row['email'],
+                "team" => $row['team'],
+                "state" => [
+                    "id" => +$row['id_e'],
+                    "title" => $row['title'],
+                    "color" => $row['state_color'],
+                    "icon" => $row['state_icon']
+                ],
+                "skills" => [],
+                "marks" => []
+            ];
+        }
+
+        // Add skills to the skills array
+        if ($row['skill_name']) {
+            $skills[] = [
+                "name" => $row["skill_name"],
+                "level" => +$row["skill_level"],
+                "color" => $row["skill_color"],
+                "icon" => $row["skill_icon"]
+            ];
+        }
+
+        // Add marks to the marks array
+        if ($row['activityId']) {
+            $marks[] = [
+                "activityId" => +$row["activityId"],
+                "mark" => +$row["mark"]
+            ];
+        }
+    }
+
+    // Attach skills and marks to the response
+    $response["skills"] = $skills;
+    $response["marks"] = $marks;
+
     return $response;
 }
+
 
 function getUsersIdFromGroupe($id_groupe)
 {
@@ -89,5 +111,3 @@ function getGroupeActivite($id_groupe)
 
     return $result;
 }
-
-?>

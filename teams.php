@@ -5,7 +5,6 @@ include_once "db_request.php";
 
 get("/teams/:team_id", function ($param) {
     $id_groupe = $param["team_id"];
-
     if (!db()) {
         die("Erreur de connexion : " . mysqli_connect_error());
     } else {
@@ -17,13 +16,14 @@ get("/teams/:team_id", function ($param) {
         $learners = [];
         while ($row = mysqli_fetch_assoc(getGroupeActivite($id_groupe))) {
             $learner_id = $row['id'];
+
             $learners[] = getUserInfo($learner_id);
         }
 
         // Ici on renvoie les données formatées en JSON
         $result_array = mysqli_fetch_assoc($result_1);
         $session = mysqli_fetch_assoc(getGroupeActivite($id_groupe));
-        $response = [[
+        $response = [
             "id" => $result_array['id'],
             "name" => $result_array['name'],
             "coin" => $result_array["coin"],
@@ -44,10 +44,8 @@ get("/teams/:team_id", function ($param) {
                     "endDate" => $session['endDate'],
                     "color" => $session['color'],
                 ],
-
             ]
-        ]];
-
+        ];
         header('Content-Type: application/json');
         echo json_encode($response);
         exit;
